@@ -1,6 +1,7 @@
 
 import styled from 'styled-components';
 import {DFlex} from '../elements/DFlex';
+import {DFlexColumns} from '../elements/DFlexColumns';
 import {useStickyState} from '../hooks/useStickyState';
 import {useTimeAgo} from '../hooks/useTimeAgo';
 
@@ -31,9 +32,9 @@ export const Card = ({id, publication, title, location,
     return (
         <>
             <Color color={publication}/>
-            <ContainerCard>
+            <ContainerCard radius={publication}>
                 <DGrid>
-                    <div>
+                    <DFlexColumns>
                         <ContainerImage>
                             <Img src={image} alt="foto del anuncio" />          
                             <Publication>{publication === 'SUPERHIGHLIGHTED' ? 'Super destacado' : (publication === 'HIGHLIGHTED' ? 'Destacado' : 'Simple')}</Publication>
@@ -50,7 +51,7 @@ export const Card = ({id, publication, title, location,
                             
                         </ContainerPrice>
                         
-                    </div>
+                    </DFlexColumns>
                     <ContainerInfo>
                         <Title>{title}</Title>
                         <Ubication>
@@ -113,10 +114,22 @@ const Color = styled.div`
 `;
 const ContainerCard = styled.div`
     width:100%;
-    border-radius:0 0 5px 5px;
+    
     background:white;
-    box-shadow: 5px 5px 5px lightgray;
+    box-shadow:3px 3px 5px 3px lightgray;
     margin-bottom:1rem;
+
+    ${props => {
+        if(props.radius === 'SIMPLE'){
+            return `
+                border-radius:5px;
+            `
+        }else{
+            return `
+                border-radius:0 0 5px 5px;
+            `
+        }
+    }}
 `;
 const DGrid = styled.div`
 
@@ -134,6 +147,7 @@ const Title = styled.h4`
 const Ubication = styled.div`
     margin-top:.5rem;
     display:flex;
+    font-size:14px;
 `;
 const Icon = styled.i`
     font-size:12px;
@@ -154,10 +168,18 @@ const Button = styled.button`
     cursor:pointer;
     outline:none;
     font-size:15px;
+    transition:ease .5s;
+
+    :hover{
+        background:tomato;
+        transition:ease .5s;
+    }
 `;
 const Img = styled.img`
     width:100%;
     height:13rem;
+    -webkit-filter: grayscale(30%);
+    
     
     @media(min-width:768px){
         height:12rem;

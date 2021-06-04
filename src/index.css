@@ -10,6 +10,7 @@ body{
   font-family: 'Roboto', sans-serif;
 }
 
+/*----Codigo para cambiar los estilos a los radio buttons-----*/
 input[type='radio']:after {
   width: 15px;
   height: 15px;
