@@ -2,12 +2,26 @@ import React, {useState} from 'react'
 import styled from 'styled-components';
 import {Line} from '../elements/Line';
 import {DFlex} from '../elements/DFlex';
+import { useDB } from '../context/Provider';
 
-export const FilterCard = () => {
+export const FilterCard = ({setSearch}) => {
 
+    //Obtenemos todas las direcciones que hay en la base de datos y las guardamos en un array
+    const data = useDB();
+    const db = data.postings;
+    const address = [];
+    db.map((loc) => {
+        return address.push(loc.posting_location);
+    })
+    
+    //STATES    
+    const [error, setError] = useState(false);
     const [clickIcon, SetClickIcon] = useState(true);
     const [clickIcon2, SetClickIcon2] = useState(true);
+    const [text, setText] = useState('');
+    const [checked, setChecked] = useState('todos');
 
+    //Cuando preciono el icono para desplegar la direccion se ejecuta la siguiente funcion
     const handleClickIcon1 = () => {
         if (!clickIcon) {
             SetClickIcon(true)
@@ -15,6 +29,7 @@ export const FilterCard = () => {
             SetClickIcon(false)
         }
     }
+    //Cuando preciono el icono para desplegar el tipo de operacion se ejecuta la siguiente funcion
     const handleClickIcon2 = () => {
         if (!clickIcon2) {
             SetClickIcon2(true)
@@ -22,6 +37,38 @@ export const FilterCard = () => {
             SetClickIcon2(false)
         }
     }
+    //Cuando preciono el boton de buscar por Direccion se ejecuta lo siguiente
+    const handleSearchClick = () => {
+        if(text === ''){
+            setError(true);
+            return;
+        }
+        
+        searchAddressCard(address, text);
+        setError(false);
+    }
+
+    //Funcion para buscar por direccion
+    const searchAddressCard = (array, txt) => {
+        //Si el array que contiene las direcciones no está vacio ejecuto lo siguiente
+        if (array.length !== 0) {
+            const name = txt.toLowerCase();
+
+            //Recorremos el array y si contiene una letra que pasamos en el buscador entonces guardamos esa palabra en setSearch
+            for(let loc of array){
+                let location = loc.address.toLowerCase();
+                if(location.includes(name) === true){
+                    setSearch(location)
+                }
+            }
+        }
+    }
+
+    const handleCheckedClick = e => {
+        setChecked(e.target.value)
+    }
+
+    console.log(checked);
 
     return (
         <Card>
@@ -40,8 +87,14 @@ export const FilterCard = () => {
             {
                 clickIcon ? 
                     <DFlex>
-                        <InputText type="text" placeholder='Buscar por dirección'/>
-                        <SearchButton><IconSearch className="fas fa-search"></IconSearch></SearchButton>
+                        <InputText 
+                            error={error}
+                            type="text" 
+                            placeholder='Buscar por dirección'
+                            value={text}
+                            onChange={e => setText(e.target.value)}
+                        />
+                        <SearchButton onClick={handleSearchClick}><IconSearch className="fas fa-search"></IconSearch></SearchButton>
                     </DFlex>
                     : null
             }
@@ -59,19 +112,19 @@ export const FilterCard = () => {
                 clickIcon2 ? 
                     <>
                         <ContainerInputRadio>
-                            <input type="radio" name='option' id='comprar' value='comprar'/>
+                            <input type="radio" name='option' id='comprar' value='comprar' onClick={handleCheckedClick}/>
                             <label htmlFor="comprar">Comprar</label>
                         </ContainerInputRadio>
                         <ContainerInputRadio>
-                            <input type="radio" name='option'  id='alquilar' value='alquilar'/>
+                            <input type="radio" name='option'  id='alquilar' value='alquilar' onClick={handleCheckedClick}/>
                             <label htmlFor="alquilar">Alquilar</label>
                         </ContainerInputRadio>
                         <ContainerInputRadio>
-                            <input type="radio" name='option'  id='temporal' value='temporal'/>
+                            <input type="radio" name='option'  id='temporal' value='temporal' onClick={handleCheckedClick}/>
                             <label htmlFor="temporal">Temporal</label>
                         </ContainerInputRadio>
                         <ContainerInputRadio>
-                            <input type="radio" name='option'  id='todos' value='todos' checked/>
+                            <input type="radio" name='option'  id='todos' value='todos' defaultChecked onClick={handleCheckedClick}/>
                             <label htmlFor="todos">Todos</label>
                         </ContainerInputRadio>
                     </>
@@ -97,6 +150,24 @@ const InputText = styled.input`
     :focus{
         border-color:#f7cd81;
     }
+
+    ${props => {
+        if(props.error === true){
+            return `
+                border-color:red;
+                :focus{
+                    border-color:red;
+                }
+            `
+        }else{
+            return `
+                border-color:lightgray;
+                :focus{
+                    border-color:#f7cd81;
+                }
+            `
+        }
+    }}
 `;
 const Br = styled.div`
     margin:.5rem 0;

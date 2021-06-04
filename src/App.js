@@ -1,3 +1,4 @@
+import {useState} from 'react';
 import styled from 'styled-components';
 import {FilterCard} from './components/FilterCard';
 import {Card} from './components/Card';
@@ -7,26 +8,37 @@ function App() {
 
   const data = useDB();
   const db = data.postings;
+
+  const [search, setSearch] = useState(null);
   
+  console.log(search)
+  console.log(db)
+
   return (
     <Container>
       <aside>
-        <FilterCard/>
+        <FilterCard setSearch={setSearch}/>
       </aside>
       <main>
-        {
-          db.map((data, i) => {
-            return <Card 
-                      key={i}
-                      publication={data.publication_plan}
-                      title={data.title}
-                      location={Object.values(data.posting_location)}
-                      description={data.posting_description}
-                      image={data.posting_picture}
-                      price={data.posting_prices}
-                  />
-          })
-        }
+        <div>
+          {
+            
+            db.map((data) => {
+              return <Card 
+                        key={data.posting_id}
+                        id={data.posting_id}
+                        publication={data.publication_plan}
+                        title={data.title}
+                        location={Object.values(data.posting_location)}
+                        description={data.posting_description}
+                        image={data.posting_picture}
+                        price={data.posting_prices}
+                        publish_date={data.publish_date}
+                        
+                      />
+            })
+          }
+        </div>
       </main>
     </Container>
   );

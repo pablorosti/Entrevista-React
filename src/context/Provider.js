@@ -1,9 +1,10 @@
 import React, {useContext} from 'react';
 import {postings} from '../db/mockedPostings';
 
-//we create the context
+//creamos el context
 const Context = React.createContext();
 
+//creamos un hook para consumir los datos desde cualquier parte de la app
 const useDB = () => {
     return useContext(Context);
 }

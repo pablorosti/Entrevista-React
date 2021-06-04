@@ -18,7 +18,7 @@ export const postings = [
     ],
     operation_type: { operation_type_id: 1, operation_type_name: "Alquiler" }, //tipo de operacion id y nombre
     publication_plan: "SIMPLE", //tipo del plan de publicacion
-    publish_date: "23/01/2020", // fecha de publicacion
+    publish_date: "05/20/2021", // fecha de publicacion
     posting_status: { status: "AVAILABLE", label: "Disponible" }, //estado del aviso ( AVAILABLE : disponible, RESERVED: reservado, FINALIZED: finalizado)
     title: "Guido y Callao, 2amb coc y lav todo luz 50m impec amob categoría ", //titulo del aviso (sera el titulo de la card)
     posting_picture: "https://preprostatic.zonapropcdn.com/avisos/1/00/44/55/79/81/360x266/1693121343.jpg", //imagen principal del aviso card
@@ -43,7 +43,7 @@ export const postings = [
     ],
     operation_type: { operation_type_id: 2, operation_type_name: "Venta" },
     publication_plan: "SUPERHIGHLIGHTED",
-    publish_date: "18/07/2019",
+    publish_date: "07/18/2019",
     posting_status: { status: "AVAILABLE", label: "Disponible" },
     title: "Dueño San Lorenzo/Güemes. LC  2 d, a balcón terraza a jardín. A nvo. cochera",
     posting_picture: "https://preprostatic.zonapropcdn.com/avisos/1/00/44/55/41/44/360x266/1693069558.jpg",
@@ -70,7 +70,7 @@ export const postings = [
       operation_type_name: "Alquiler Temporal"
     },
     publication_plan: "HIGHLIGHTED",
-    publish_date: "02/12/2019",
+    publish_date: "05/01/2021",
     posting_status: { status: "RESERVED", label: "Reservado" },
     title: "Juncal/Coronel Díaz. Al frente, 63m, gran balcón terraza. Todo luz",
     posting_picture: "https://preprostatic.zonapropcdn.com/avisos/1/00/44/18/69/48/360x266/1688441607.jpg",

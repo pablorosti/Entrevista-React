@@ -1,8 +1,11 @@
-import React, {useState} from 'react'
+
 import styled from 'styled-components';
 import {DFlex} from '../elements/DFlex';
+import {useStickyState} from '../hooks/useStickyState';
+import {useTimeAgo} from '../hooks/useTimeAgo';
 
-export const Card = ({publication, title, location, description, image, price}) => {
+export const Card = ({id, publication, title, location, 
+    description, image, price, publish_date}) => {
     
     const array = price.map((cant)=>{
         return Object.values(cant)
@@ -11,15 +14,20 @@ export const Card = ({publication, title, location, description, image, price}) 
     const amount = Object.values(arr[1]);
     const expenses = arr[2] == null ? null : Object.values(arr[2])
 
-     const [clickIcon, setClickIcon] = useState(false);
-     const handleIconClick = () => {
+    //Llamamos al hooks que guarda el like aun después de recargada la pagina
+    const [clickIcon, setClickIcon] = useStickyState(false, 'clickIcon');
+    //Cuando precionamos el boton de favorito
+    const handleIconClick = () => {
         if (!clickIcon) {
             setClickIcon(true)
         }else{
             setClickIcon(false)
         }
-     }
+    }
 
+    //Llamamos al hooks que calcula el tiempo desde que se hizo la publicacion
+    const diff = useTimeAgo(publish_date);
+    
     return (
         <>
             <Color color={publication}/>
@@ -30,7 +38,7 @@ export const Card = ({publication, title, location, description, image, price}) 
                             <Img src={image} alt="foto del anuncio" />          
                             <Publication>{publication === 'SUPERHIGHLIGHTED' ? 'Super destacado' : (publication === 'HIGHLIGHTED' ? 'Destacado' : 'Simple')}</Publication>
                             {
-                                clickIcon ? <ButtonIcon isOk={clickIcon} onClick={handleIconClick}><i isOk={clickIcon} className="far fa-heart"></i></ButtonIcon> : <ButtonIcon isOk={clickIcon} onClick={handleIconClick}><i isOk={clickIcon} className="far fa-heart"></i></ButtonIcon>
+                                clickIcon ? <ButtonIcon isok={clickIcon} onClick={handleIconClick}><i isok={clickIcon} className="far fa-heart"></i></ButtonIcon> : <ButtonIcon isok={clickIcon} onClick={handleIconClick}><i isok={clickIcon} className="far fa-heart"></i></ButtonIcon>
                             }
                                                      
                         </ContainerImage>
@@ -56,8 +64,23 @@ export const Card = ({publication, title, location, description, image, price}) 
                         
                         <Description>{description}</Description>
                         <DFlex>
-                            <p><Icon className="fas fa-history"></Icon>Publicado hace 1 dia</p>
-                            <Button>Contactar</Button>
+                            <TimeAgo>
+                                <Icon className="fas fa-history"></Icon>
+                                {
+                                    Math.trunc(diff) < 30 
+                                        ? <>
+                                            {Math.trunc(diff) > 1 
+                                                ? `Publicado hace ${Math.trunc(diff)} dias` 
+                                                : `Publicado hace ${Math.trunc(diff)} dia`} 
+                                        </>
+                                        : <>
+                                            { Math.trunc(diff / 30) > 1 
+                                                ? `Publicado hace ${Math.trunc(diff / 30)} meses` 
+                                                : `Publicado hace ${Math.trunc(diff / 30)} mes`}
+                                        </> 
+                                }
+                            </TimeAgo>
+                            <Button >Contactar</Button>
                         </DFlex>
                     </ContainerInfo>
                     
@@ -69,19 +92,21 @@ export const Card = ({publication, title, location, description, image, price}) 
 
 const Color = styled.div`
     border-radius:5px 5px 0 0;
-    height:5px;
+    
     ${props => {
         if (props.color === 'SIMPLE') {
             return `
             background-color: white;
+            height:0px;
             
         `}else if(props.color === 'SUPERHIGHLIGHTED'){
             return `
             background-color: violet;
-            
+            height:7px;
         `}else if(props.color === 'HIGHLIGHTED'){
             return `
-            background-color: green;  
+            background-color: green;
+            height:7px;  
         `
         }
     }}
@@ -151,19 +176,19 @@ const Publication = styled.p`
     
 `;
 const ButtonIcon = styled.button`
-    background: ${p => p.isOk ? 'red' : 'white'};
+    background: ${p => p.isok ? 'red' : 'white'};
     position:absolute;
     top:.5rem;
     right:.5rem;
     border:none;
     border-radius:50%;
-    padding:.5rem;
+    padding:.4rem;
     outline:none;
     cursor:pointer;
 
     & > i{
         font-size:1.2rem;
-        color: ${p => p.isOk ? 'white' : 'black'};
+        color: ${p => p.isok ? 'white' : 'black'};
     }
 `;
 const ContainerPrice = styled.div`
@@ -172,4 +197,7 @@ const ContainerPrice = styled.div`
 const Price = styled.p`
     font-weight:bold;
     font-size:1.4rem;
+`;
+const TimeAgo = styled.p`
+    font-size:13px;
 `;
